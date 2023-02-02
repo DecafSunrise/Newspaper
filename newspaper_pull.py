@@ -12,8 +12,9 @@ from sites import urls
 saveDir = r"D:\Work\Data\Newspaper"
 
 start = datetime.datetime.now()
+print(f"Started at: {start.strftime('%m/%d/%Y, %H:%M:%S')}")
 timestamp = datetime.datetime.now().isoformat("T").split(".")[0].replace(":","-").replace("-","-")[:16]
-print("Timestamp", timestamp)
+# print("Timestamp", timestamp)
 
 # for paper in papers:
 papers = [newspaper.build(url) for url in urls]
@@ -25,7 +26,7 @@ num_papers = len(papers)
 current_number = 0
 for p in papers:
     current_number += 1
-    print(current_number, "/", num_papers)
+    # print(current_number, "/", num_papers)
     for a in p.articles:
         if a.meta_lang == "":
             a.parse()
