@@ -9,6 +9,7 @@ import time
 from datetime import datetime
 import psycopg2
 import sqlalchemy
+import uuid
 
 from sqlalchemy.dialects import postgresql
 from sqlalchemy import Integer, Numeric, String, DateTime, create_engine
@@ -62,8 +63,10 @@ if len(article_dumps)>0:
         print('\t',articles)
         try:
           df = pd.read_json(os.path.join('/home/dan/articles', articles))
-
-          df = df[['link_hash', 'source_url', 'url', 'title', 'text', 'keywords', 'meta_keywords',
+          
+          df['docid'] = [f'doc://f{uuid.uuid4()}' for x in range(0, len(df))]
+          
+          df = df[['docid', 'link_hash', 'source_url', 'url', 'title', 'text', 'keywords', 'meta_keywords',
         'tags', 'authors', 'publish_date', 'summary', 'article_html',
         'meta_description', 'meta_lang', 'canonical_link',  'source_domain', 'source_brand',
         'source_description']]
@@ -79,7 +82,8 @@ if len(article_dumps)>0:
         try:
           df.to_sql('articles', con=conn, if_exists='append', index=False, 
                               dtype={
-                      'link_hash': String,
+                          'docid': String,
+                          'link_hash': String,
                           'source_url':String,
                           'url':String,
                           'title':String,
